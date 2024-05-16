@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.model.OrderItem;
 import com.example.demo.model.Product;
+import com.example.demo.service.OrderService;
 import com.example.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private OrderService orderService;
 
     @Transactional
     public List<Product> findAllProducts() {
@@ -74,6 +78,16 @@ public class ProductService {
         if (product != null) {
             product.setProductPrice(price);
             productRepository.save(product);
+            updateOrdersWithProduct(product);
+        }
+    }
+
+    private void updateOrdersWithProduct(Product product) {
+        List<OrderItem> orderItems = product.getOrderItems();
+        for (OrderItem orderItem : orderItems) {
+            orderItem.setPrice(product.getProductPrice() * orderItem.getQuantity());
+            orderItem.getOrder().recalculateTotalPrice();
+            orderService.saveOrder(orderItem.getOrder());
         }
     }
 }

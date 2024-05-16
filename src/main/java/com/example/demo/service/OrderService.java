@@ -27,6 +27,7 @@ public class OrderService {
 
     @Transactional
     public Order saveOrder(Order order) {
+        order.recalculateTotalPrice();
         return orderRepository.save(order);
     }
 

@@ -3,6 +3,9 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "Product")
 @Data
@@ -27,6 +30,17 @@ public class Product {
     private Suppliers supplier;
 
     public Product() {}
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderItem> orderItems = new ArrayList<>();
+
+    // Add getter and setter for orderItems
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
 
     // Getters and Setters
     public Long getProductId() { return productId; }

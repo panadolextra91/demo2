@@ -40,4 +40,10 @@ public class Order {
     public void setTotalPrice(Double totalPrice) { this.totalPrice = totalPrice; }
     public Customer getCustomer() { return customer; }
     public void setCustomer(Customer customer) { this.customer = customer; }
+    public void recalculateTotalPrice() {
+        this.totalPrice = this.orderItems.stream()
+                .mapToDouble(OrderItem::getPrice)
+                .sum();
+    }
+
 }
